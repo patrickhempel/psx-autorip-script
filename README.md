@@ -1,9 +1,7 @@
 # makemkv-autorip-script
-A script for auto ripping movies using makemkv
+A script for automatically ripping movies and TV shows using [MakeMKV](https://www.makemkv.com/).
+It has been written with the focus on parallelization, so that you can rip from multiple drives at once.
 
-This script can be auto executed when the BluRay drive is accessed by using incrontab.
-See here: http://linux.die.net/man/5/incrontab
+Disks will automatically be ejected once they're finished and newly inserted disks will automatically be ripped with the predefined, global parameters in the settings.cfg file.
 
-For example, if your drive is '/dev/sr0', you can execute the script with adding the following line.
-
-/dev/sr0 IN_ACCESS,IN_NO_LOOP ripmovie
+This script was only tested on Ubuntu 20.04.01. Whilst it might work with other systems, it has not been tested on them.
