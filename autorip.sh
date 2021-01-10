@@ -22,6 +22,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # Construct the arguments for later use
+if [[ $OUTPUTDIR == \~* ]]; then
+	if [[ $OUTPUTDIR == \~/* ]]; then
+		OUTPUTDIR=$(echo "/home/$USER/${OUTPUTDIR:2}" | sed 's:/*$::')
+	else
+		OUTPUTDIR="/home/$USER"
+	fi
+fi		
 if [ -d "$OUTPUTDIR" ]; then
 	:
 else
