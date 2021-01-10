@@ -21,6 +21,12 @@ Make sure these are present on your system before running the script.
 Start MakeMKVCon at least once before using this script: `/usr/bin/makemkvcon`.
 This will make sure the necessary config files are being created properly and that the installation has succeeded.
 
-Download the scripts and setting file to a directory of your choice and make the scripts executable. Then, just run the wrapper and you're good to go: `bash wrapper.sh`
+Download the scripts and setting file to a directory of your choice and make the scripts executable.
+Don't forget to adjust the settings.cfg file to your liking, especially the [license key](https://www.makemkv.com/forum/viewtopic.php?t=1053).
+Then, just run the wrapper and you're good to go: `bash wrapper.sh`
 
 Happy ripping!
+
+# Note
+If you just want to rip a single disc with your predefined settings, you can call the autorip.sh-script directly, by passing the drive's location as an argument: `bash autorip.sh /dev/sr0`.
+This will rip the disc the same way as with the wrapper, but just once, without all the sweet automation.
