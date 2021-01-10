@@ -30,3 +30,7 @@ Happy ripping!
 # Note
 If you just want to rip a single disc with your predefined settings, you can call the autorip.sh-script directly, by passing the drive's location as an argument: `bash autorip.sh /dev/sr0`.
 This will rip the disc the same way as with the wrapper, but just once, without all the sweet automation.
+
+# Roadmap
+* Automated install
+* Custom naming schemes
