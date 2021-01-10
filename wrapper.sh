@@ -1,6 +1,11 @@
 #!/bin/bash
 scriptroot=$(dirname $(realpath $0))
 
+# Update License key from settings.cfg to ~/.MakeMKV/settings.conf
+newlicense="$(awk '/^license/{print $1}' $scriptroot/settings.cfg | cut -d '=' -f2)"
+oldlicense="$(awk '/^app_Key/{print $3}' ~/.MakeMKV/settings.conf | cut -d '=' -f2 | xargs)"
+sed -i "s/$oldlicense/$newlicense/" ~/.MakeMKV/settings.conf
+
 # Initial search for drives
 drives=($(ls /dev/sr*))
 echo "----------------------------"
