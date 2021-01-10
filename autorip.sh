@@ -69,13 +69,17 @@ echo "$SOURCEDRIVE: Started ripping process"
 
 #Extract DVD Title from Drive
 
-DISKTITLERAW=$(sleep 5 && blkid -o value -s LABEL $SOURCEDRIVE && sleep 5)
+DISKTITLERAW=$(blkid -o value -s LABEL $SOURCEDRIVE)
 DISKTITLERAW=${DISKTITLERAW// /_}
 NOWDATE=$(date +"%Y%m%d-%k%M%S")
 DISKTITLE=$(echo "${DISKTITLERAW}_-_$NOWDATE")
 
 
 mkdir $OUTPUTDIR/$DISKTITLE
-makemkvcon mkv --messages=$SCRIPTROOT/logs/$NOWDATE.log --noscan --robot $ARGS disc:$SOURCEMMKVDRIVE all $OUTPUTDIR/$DISKTITLE
-echo "$SOURCEDRIVE: Ripping finished, ejecting"
+makemkvcon mkv --messages=$SCRIPTROOT/logs/$NOWDATE_$DISKTITLERAW.log --noscan --robot $ARGS disc:$SOURCEMMKVDRIVE all $OUTPUTDIR/$DISKTITLE
+if [ $? -eq 0 ]; then
+	echo "$SOURCEDRIVE: Ripping finished, ejecting"
+else
+	echo "$SOURCEDRIVE: RIPPING FAILED, ejecting. Please check the logs under $SCRIPTROOT/logs/$NOWDATE_$DISKTITLERAW.log"
+fi
 eject $SOURCEDRIVE
