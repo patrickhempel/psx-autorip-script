@@ -9,6 +9,18 @@ MINLENGTH="$(awk '/^minlength/{print $1}' $SCRIPTROOT/settings.cfg | cut -d '=' 
 OUTPUTDIR="$(awk '/^outputdir/' $SCRIPTROOT/settings.cfg | cut -d '=' -f2 | cut -f1 -d"#" | xargs)"
 ARGS=""
 
+# Check if the source drive has actually been set and is available
+if [ -z "$SOURCEDRIVE" ]; then
+	echo "ERROR: Source Drive is not defined."
+	echo "When calling this script manually, make sure to pass the drive path as a variable: ./autorip.sh [DRIVE]"
+	exit 1
+fi
+setcd -i "$SOURCEDRIVE" | grep --quiet 'Disc found'
+if [ $? -ne 0 ]; then
+        echo "$SOURCEDRIVE: ERROR: Source Drive is not available."
+        exit 1
+fi
+
 # Construct the arguments for later use
 if [ -d "$OUTPUTDIR" ]; then
 	:
@@ -37,18 +49,6 @@ if [[ "$MINLENGTH" =~ '^[0-9]+$' ]]; then
 	ARGS=$(echo "$ARGS --minlength=$MINLENGTH")
 else
 	ARGS=$(echo "$ARGS --minlength=0")
-fi
-
-
-# Check if the source drive has actually been set and is available
-if [ -z "$SOURCEDRIVE" ]; then
-	echo "$SOURCEDRIVE: ERROR: Source Drive is not defined."
-	exit 1
-fi
-setcd -i "$SOURCEDRIVE" | grep --quiet 'Disc found'
-if [ $? -ne 0 ]; then
-        echo "$SOURCEDRIVE: ERROR: Source Drive is not available."
-        exit 1
 fi
 
 # Match unix drive name to Make-MKV drive number and check it
