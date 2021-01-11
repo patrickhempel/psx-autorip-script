@@ -34,3 +34,4 @@ This will rip the disc the same way as with the wrapper, but just once, without 
 # Roadmap
 * Automated install
 * Custom naming schemes
+* Check for dependencies
