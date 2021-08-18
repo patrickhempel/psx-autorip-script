@@ -5,7 +5,7 @@ if [ "$USER" != root ] && [ "$SUDO_USER" != root ]; then
 fi
 
 scriptroot=$(dirname "$(realpath "$0")")
-userhome=$(eval echo ~"$SUDO_USER")
+userhome=$(eval echo ~"${SUDO_USER:-$USER}")
 
 
 # Update License key from settings.cfg to ~/.MakeMKV/settings.conf
