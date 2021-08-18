@@ -4,19 +4,21 @@ if [ "$USER" != root ] && [ "$SUDO_USER" != root ]; then
 	exit 1
 fi
 
-scriptroot=$(dirname $(realpath $0))
-userhome=$(eval echo ~$SUDO_USER)
+scriptroot=$(dirname "$(realpath "$0")")
+userhome=$(eval echo ~"$SUDO_USER")
 
 
 # Update License key from settings.cfg to ~/.MakeMKV/settings.conf
-newlicense="$(awk '/^license/{print $1}' $scriptroot/settings.cfg | cut -d '=' -f2)"
-oldlicense="$(awk '/^app_Key/{print $3}' $userhome/.MakeMKV/settings.conf | cut -d '=' -f2 | xargs)"
-sed -i "s/$oldlicense/$newlicense/" $userhome/.MakeMKV/settings.conf
+newlicense="$(awk '/^license/{print $1}' "$scriptroot/settings.cfg" | cut -d '=' -f2)"
+oldlicense="$(awk '/^app_Key/{print $3}' "$userhome/.MakeMKV/settings.conf" | cut -d '=' -f2 | xargs)"
+sed -i "s/$oldlicense/$newlicense/" "$userhome/.MakeMKV/settings.conf"
 
 # Initial search for drives
-drives=($(ls /dev/sr*))
+mapfile -t drives < <(ls /dev/sr*)
 echo "----------------------------"
-printf "Found the following devices:\n$(printf '%s\n' "${drives[@]}")\n"
+printf "Found the following devices:\n"
+printf '%s\n' "${drives[@]}"
+printf '\n'
 echo "----------------------------"
 
 # Create template for forking
@@ -31,7 +33,7 @@ discstatus () {
 				echo "$drive: disc is ready" >&2;
 				unset repeatnodisc;
 				unset repeatemptydisc;
-				/bin/bash $scriptroot/autorip.sh "$drive";
+				/bin/bash "$scriptroot/autorip.sh" "$drive";
 				sleep 10;
 				;;
 			# What to do when the disc is found, but not yet ready
@@ -61,7 +63,7 @@ discstatus () {
 			# What to do when none of the above was the case
 				echo "[ERROR] $drive: Confused by setcd -i, bailing out" >&2;
 				unset repeatemptydisc;
-				eject $drive
+				eject "$drive"
 		esac
 	done
 }
