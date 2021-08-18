@@ -1,10 +1,17 @@
 #!/bin/bash
+if [ "$USER" != root ] && [ "$SUDO_USER" != root ]; then
+	echo "This script needs to be executed with sudo!"
+	exit 1
+fi
+
 scriptroot=$(dirname $(realpath $0))
+userhome=$(eval echo ~$SUDO_USER)
+
 
 # Update License key from settings.cfg to ~/.MakeMKV/settings.conf
 newlicense="$(awk '/^license/{print $1}' $scriptroot/settings.cfg | cut -d '=' -f2)"
-oldlicense="$(awk '/^app_Key/{print $3}' ~/.MakeMKV/settings.conf | cut -d '=' -f2 | xargs)"
-sed -i "s/$oldlicense/$newlicense/" ~/.MakeMKV/settings.conf
+oldlicense="$(awk '/^app_Key/{print $3}' $userhome/.MakeMKV/settings.conf | cut -d '=' -f2 | xargs)"
+sed -i "s/$oldlicense/$newlicense/" $userhome/.MakeMKV/settings.conf
 
 # Initial search for drives
 drives=($(ls /dev/sr*))
