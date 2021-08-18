@@ -76,8 +76,8 @@ NOWDATE=$(date +"%Y%m%d-%k%M%S")
 DISKTITLE="${DISKTITLERAW}_-_$NOWDATE"
 
 
-mkdir "$OUTPUTDIR"/"$DISKTITLE"
-makemkvcon mkv --messages="${SCRIPTROOT}/logs/${NOWDATE}_$DISKTITLERAW.log" --noscan --robot "$ARGS" disc:"$SOURCEMMKVDRIVE" all "${OUTPUTDIR}/${DISKTITLE}"
+mkdir "$OUTPUTDIR/$DISKTITLE"
+makemkvcon mkv --messages="${SCRIPTROOT}/logs/${NOWDATE}_$DISKTITLERAW.log" --noscan --robot $ARGS disc:"$SOURCEMMKVDRIVE" all "${OUTPUTDIR}/${DISKTITLE}"
 if [ ! $? ]; then
 	echo "$SOURCEDRIVE: Ripping finished, ejecting"
 else
