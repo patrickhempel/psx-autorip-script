@@ -29,7 +29,7 @@ discstatus () {
 		case "$discinfo" in
 			# What to do when the disc is found and ready
 			*'Disc found'*)
-				echo "$drive: disc is ready" >&2;
+				echo "[INFO] $drive: disc is ready" >&2;
 				unset repeatnodisc;
 				unset repeatemptydisc;
 				/bin/bash "$scriptroot/autorip.sh" "$drive";
