@@ -18,7 +18,6 @@ mapfile -t drives < <(ls /dev/sr*)
 echo "----------------------------"
 printf "Found the following devices:\n"
 printf '%s\n' "${drives[@]}"
-printf '\n'
 echo "----------------------------"
 
 # Create template for forking
