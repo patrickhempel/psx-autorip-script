@@ -28,7 +28,7 @@ if [[ $OUTPUTDIR == \~* ]]; then
 	else
 		OUTPUTDIR="/home/$USER"
 	fi
-fi		
+fi
 if [ -d "$OUTPUTDIR" ]; then
 	:
 else
@@ -38,7 +38,8 @@ fi
 if [ -d "$SCRIPTROOT/logs" ]; then
 	:
 else
-	echo "[ERROR]: Log directory under $SCRIPTROOT/logs is missing!"
+	echo "[ERROR]: Log directory under $SCRIPTROOT/logs is missing! Trying to create it."
+	mkdir $SCRIPTROOT/logs
 	exit 1
 fi
 
