@@ -24,9 +24,9 @@ fi
 # Construct the arguments for later use
 if [[ $OUTPUTDIR == \~* ]]; then
 	if [[ $OUTPUTDIR == \~/* ]]; then
-		OUTPUTDIR=$(echo "/home/$USER/${OUTPUTDIR:2}" | sed 's:/*$::')
+		OUTPUTDIR=$(echo "$(eval echo ~${SUDO_USER:-$USER})/${OUTPUTDIR:2}") | sed 's:/*$::')
 	else
-		OUTPUTDIR="/home/$USER"
+		OUTPUTDIR="$(eval echo ~${SUDO_USER:-$USER})"
 	fi
 fi
 if [ -d "$OUTPUTDIR" ]; then
