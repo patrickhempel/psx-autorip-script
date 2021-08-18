@@ -2,11 +2,11 @@
 
 # Defining variables for later use
 SOURCEDRIVE="$1"
-SCRIPTROOT="$(dirname $(realpath $0))"
-CACHE="$(awk '/^cache/{print $1}' $SCRIPTROOT/settings.cfg | cut -d '=' -f2)"
-DEBUG="$(awk '/^debug/{print $1}' $SCRIPTROOT/settings.cfg | cut -d '=' -f2)"
-MINLENGTH="$(awk '/^minlength/{print $1}' $SCRIPTROOT/settings.cfg | cut -d '=' -f2)"
-OUTPUTDIR="$(awk '/^outputdir/' $SCRIPTROOT/settings.cfg | cut -d '=' -f2 | cut -f1 -d"#" | xargs)"
+SCRIPTROOT="$(dirname """$(realpath "$0")""")"
+CACHE="$(awk '/^cache/{print $1}' "$SCRIPTROOT/settings.cfg" | cut -d '=' -f2)"
+DEBUG="$(awk '/^debug/{print $1}' "$SCRIPTROOT/settings.cfg" | cut -d '=' -f2)"
+MINLENGTH="$(awk '/^minlength/{print $1}' "$SCRIPTROOT/settings.cfg" | cut -d '=' -f2)"
+OUTPUTDIR="$(awk '/^outputdir/' "$SCRIPTROOT/settings.cfg" | cut -d '=' -f2 | cut -f1 -d"#" | xargs)"
 ARGS=""
 
 # Check if the source drive has actually been set and is available
@@ -16,17 +16,17 @@ if [ -z "$SOURCEDRIVE" ]; then
 	exit 1
 fi
 setcd -i "$SOURCEDRIVE" | grep --quiet 'Disc found'
-if [ $? -ne 0 ]; then
+if [ ! $? ]; then
         echo "$SOURCEDRIVE: ERROR: Source Drive is not available."
         exit 1
 fi
 
 # Construct the arguments for later use
-if [[ $OUTPUTDIR == \~* ]]; then
-	if [[ $OUTPUTDIR == \~/* ]]; then
-		OUTPUTDIR=$(echo "$(eval echo ~${SUDO_USER:-$USER})/${OUTPUTDIR:2}") | sed 's:/*$::')
+if [[ $OUTPUTDIR == ""\~*"" ]]; then
+	if [[ $OUTPUTDIR == ""\~/*"" ]]; then
+		OUTPUTDIR=$(echo "$(eval echo ~"${SUDO_USER:-$USER}")/${OUTPUTDIR:2}" | sed 's:/*$::')
 	else
-		OUTPUTDIR="$(eval echo ~${SUDO_USER:-$USER})"
+		OUTPUTDIR="$(eval echo ~"${SUDO_USER:-$USER}")"
 	fi
 fi
 if [ -d "$OUTPUTDIR" ]; then
@@ -39,24 +39,24 @@ if [ -d "$SCRIPTROOT/logs" ]; then
 	:
 else
 	echo "[ERROR]: Log directory under $SCRIPTROOT/logs is missing! Trying to create it."
-	mkdir $SCRIPTROOT/logs
+	mkdir "$SCRIPTROOT/logs"
 	exit 1
 fi
 
 if [ -z "$CACHE" ]; then
 	if [ "$CACHE" = "-1" ]; then
-		break
-	elif [[ "$CACHE" =~ '^[0-9]+$' ]]; then
+		:
+	elif [[ "$CACHE" =~ ^[0-9]+$ ]]; then
 		ARGS="--cache=$CACHE"
 	fi
 fi
 if [ "$DEBUG" = "true" ]; then
-	ARGS=$(echo "$ARGS --debug")
+	ARGS="$ARGS --debug"
 fi
-if [[ "$MINLENGTH" =~ '^[0-9]+$' ]]; then
-	ARGS=$(echo "$ARGS --minlength=$MINLENGTH")
+if [[ "$MINLENGTH" =~ ^[0-9]+$ ]]; then
+	ARGS="$ARGS --minlength=$MINLENGTH"
 else
-	ARGS=$(echo "$ARGS --minlength=0")
+	ARGS="$ARGS --minlength=0"
 fi
 
 # Match unix drive name to Make-MKV drive number and check it
@@ -70,17 +70,17 @@ echo "$SOURCEDRIVE: Started ripping process"
 
 #Extract DVD Title from Drive
 
-DISKTITLERAW=$(blkid -o value -s LABEL $SOURCEDRIVE)
+DISKTITLERAW=$(blkid -o value -s LABEL "$SOURCEDRIVE")
 DISKTITLERAW=${DISKTITLERAW// /_}
 NOWDATE=$(date +"%Y%m%d-%k%M%S")
-DISKTITLE=$(echo "${DISKTITLERAW}_-_$NOWDATE")
+DISKTITLE="${DISKTITLERAW}_-_$NOWDATE"
 
 
-mkdir $OUTPUTDIR/$DISKTITLE
-makemkvcon mkv --messages=$SCRIPTROOT/logs/$NOWDATE_$DISKTITLERAW.log --noscan --robot $ARGS disc:$SOURCEMMKVDRIVE all $OUTPUTDIR/$DISKTITLE
-if [ $? -eq 0 ]; then
+mkdir "$OUTPUTDIR"/"$DISKTITLE"
+makemkvcon mkv --messages="${SCRIPTROOT}/logs/${NOWDATE}_$DISKTITLERAW.log" --noscan --robot "$ARGS" disc:"$SOURCEMMKVDRIVE" all "${OUTPUTDIR}/${DISKTITLE}"
+if [ ! $? ]; then
 	echo "$SOURCEDRIVE: Ripping finished, ejecting"
 else
-	echo "$SOURCEDRIVE: RIPPING FAILED, ejecting. Please check the logs under $SCRIPTROOT/logs/$NOWDATE_$DISKTITLERAW.log"
+	echo "$SOURCEDRIVE: RIPPING FAILED, ejecting. Please check the logs under ${SCRIPTROOT}/logs/${NOWDATE}_${DISKTITLERAW}.log"
 fi
-eject $SOURCEDRIVE
+eject "$SOURCEDRIVE"
