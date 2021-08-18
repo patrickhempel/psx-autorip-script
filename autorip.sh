@@ -72,7 +72,7 @@ echo "[INFO] $SOURCEDRIVE: Started ripping process"
 
 DISKTITLERAW=$(blkid -o value -s LABEL "$SOURCEDRIVE")
 DISKTITLERAW=${DISKTITLERAW// /_}
-NOWDATE=$(date +"%Y%m%d-%k%M%S")
+NOWDATE=$(date +"%F_%H-%M-%S")
 DISKTITLE="${DISKTITLERAW}_-_$NOWDATE"
 
 
