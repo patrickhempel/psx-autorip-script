@@ -79,8 +79,8 @@ DISKTITLE="${DISKTITLERAW}_-_$NOWDATE"
 mkdir "$OUTPUTDIR/$DISKTITLE"
 makemkvcon mkv --messages="${SCRIPTROOT}/logs/${NOWDATE}_$DISKTITLERAW.log" --noscan --robot $ARGS disc:"$SOURCEMMKVDRIVE" all "${OUTPUTDIR}/${DISKTITLE}"
 if [ ! $? ]; then
-	echo "$SOURCEDRIVE: Ripping finished, ejecting"
+	echo "$SOURCEDRIVE: Ripping finished (exit code $?), ejecting"
 else
-	echo "$SOURCEDRIVE: RIPPING FAILED, ejecting. Please check the logs under ${SCRIPTROOT}/logs/${NOWDATE}_${DISKTITLERAW}.log"
+	echo "$SOURCEDRIVE: RIPPING FAILED (exit code $?), ejecting. Please check the logs under ${SCRIPTROOT}/logs/${NOWDATE}_${DISKTITLERAW}.log"
 fi
 eject "$SOURCEDRIVE"
