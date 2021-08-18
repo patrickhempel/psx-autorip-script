@@ -11,13 +11,13 @@ ARGS=""
 
 # Check if the source drive has actually been set and is available
 if [ -z "$SOURCEDRIVE" ]; then
-	echo "ERROR: Source Drive is not defined."
-	echo "When calling this script manually, make sure to pass the drive path as a variable: ./autorip.sh [DRIVE]"
+	echo "[ERROR] Source Drive is not defined."
+	echo "        When calling this script manually, make sure to pass the drive path as a variable: ./autorip.sh [DRIVE]"
 	exit 1
 fi
 setcd -i "$SOURCEDRIVE" | grep --quiet 'Disc found'
 if [ ! $? ]; then
-        echo "$SOURCEDRIVE: ERROR: Source Drive is not available."
+        echo "[ERROR] $SOURCEDRIVE: Source Drive is not available."
         exit 1
 fi
 
@@ -62,11 +62,11 @@ fi
 # Match unix drive name to Make-MKV drive number and check it
 SOURCEMMKVDRIVE=$(makemkvcon --robot --noscan --cache=1 info disc:9999 | grep "$SOURCEDRIVE" | grep -o -E '[0-9]+' | head -1)
 if [ -z "$SOURCEMMKVDRIVE" ]; then
-	echo "$SOURCEDRIVE: ERROR: Make-MKV Source Drive is not defined."
+	echo "[ERROR] $SOURCEDRIVE: Make-MKV Source Drive is not defined."
 	exit 1
 fi
 
-echo "$SOURCEDRIVE: Started ripping process"
+echo "[INFO] $SOURCEDRIVE: Started ripping process"
 
 #Extract DVD Title from Drive
 
@@ -79,8 +79,8 @@ DISKTITLE="${DISKTITLERAW}_-_$NOWDATE"
 mkdir "$OUTPUTDIR/$DISKTITLE"
 makemkvcon mkv --messages="${SCRIPTROOT}/logs/${NOWDATE}_$DISKTITLERAW.log" --noscan --robot $ARGS disc:"$SOURCEMMKVDRIVE" all "${OUTPUTDIR}/${DISKTITLE}"
 if [ ! $? ]; then
-	echo "$SOURCEDRIVE: Ripping finished (exit code $?), ejecting"
+	echo "[INFO] $SOURCEDRIVE: Ripping finished (exit code $?), ejecting"
 else
-	echo "$SOURCEDRIVE: RIPPING FAILED (exit code $?), ejecting. Please check the logs under ${SCRIPTROOT}/logs/${NOWDATE}_${DISKTITLERAW}.log"
+	echo "[ERROR] $SOURCEDRIVE: RIPPING FAILED (exit code $?), ejecting. Please check the logs under ${SCRIPTROOT}/logs/${NOWDATE}_${DISKTITLERAW}.log"
 fi
 eject "$SOURCEDRIVE"
