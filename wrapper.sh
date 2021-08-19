@@ -20,6 +20,9 @@ printf "Found the following devices:\n"
 printf '%s\n' "${drives[@]}"
 echo "----------------------------"
 
+# Eject all drives to indicate startup
+for drive in "${drives[@]}"; do eject "$drive" & done
+
 # Create template for forking
 discstatus () {
 	while true; do
